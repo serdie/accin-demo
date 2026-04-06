@@ -1,0 +1,20 @@
+import { RoleSelector } from "@/components/auth/RoleSelector";
+
+export default function LoginPage() {
+  return (
+    <div className="min-h-screen bg-slate-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+      <div className="sm:mx-auto sm:w-full sm:max-w-md text-center">
+        <h1 className="text-4xl font-extrabold text-[#0f766e]">
+          ACH <span className="text-[#ea580c]">ACCIN</span>
+        </h1>
+        <h2 className="mt-4 text-2xl font-bold text-slate-900 border-b pb-4">
+          Itinerarios Conectados
+        </h2>
+      </div>
+
+      <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
+        <RoleSelector />
+      </div>
+    </div>
+  );
+}
