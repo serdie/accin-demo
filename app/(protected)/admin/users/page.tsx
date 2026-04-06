@@ -8,9 +8,11 @@ import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
 import { ShieldAlert, Users, Search, MoreVertical, Edit2, Shield, AlertTriangle } from "lucide-react";
 import { Input } from "@/components/ui/Input";
+import { Modal } from "@/components/ui/Modal";
 
 export default function AdminUsersPage() {
   const { user } = useAuth();
+  const [isModalOpen, setIsModalOpen] = useState(false);
   
   if (user?.role !== Role.ADMIN) {
     return (
@@ -44,7 +46,7 @@ export default function AdminUsersPage() {
         </div>
         <div className="relative z-10 flex space-x-3">
           <Button variant="outline" className="text-slate-300 border-slate-700 hover:bg-slate-800 hover:text-white">Exportar Accesos</Button>
-          <Button className="bg-red-600 hover:bg-red-700 text-white border-none shadow-lg shadow-red-900/50">Nuevo Empleado</Button>
+          <Button className="bg-red-600 hover:bg-red-700 text-white border-none shadow-lg shadow-red-900/50" onClick={() => setIsModalOpen(true)}>Nuevo Empleado</Button>
         </div>
       </div>
 
@@ -146,6 +148,38 @@ export default function AdminUsersPage() {
           <p className="text-xs mt-1 opacity-90">En el ámbito productivo, la tabla superior reflejará sincronización bi-direccional con el servicio de identidad en Cloud. La asignación granular de políticas (RBAC avanzado) será manipulable a nivel de grupos de seguridad.</p>
         </div>
       </div>
+
+      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title="Invitar Nuevo Empleado (Mock)">
+        <form className="space-y-4" onSubmit={(e) => { e.preventDefault(); setIsModalOpen(false); alert("Notificación enviada al empleado con sus credenciales de SSO."); }}>
+          <div className="grid grid-cols-2 gap-4">
+            <Input label="Nombre de Empleado" placeholder="María Lopez" required />
+            <Input label="Email Corporativo" type="email" placeholder="mlopez@ach.org" required />
+          </div>
+          
+          <div className="space-y-1">
+            <label className="block text-sm font-medium text-slate-700">Rol a Asignar</label>
+            <select className="flex h-10 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary">
+              <option value="TECNICO">Técnico / Orientador</option>
+              <option value="GESTOR">Gestor de Oficina</option>
+              <option value="ADMIN">Administrador (Alerta: Permisos Totales)</option>
+            </select>
+          </div>
+
+          <div className="space-y-1">
+            <label className="block text-sm font-medium text-slate-700">Oficina / Hub Asignado</label>
+            <Input placeholder="Ej. Madrid Sur, Comunidad de Andalucía..." required />
+          </div>
+
+          <div className="bg-yellow-50 text-yellow-800 p-3 rounded text-sm mt-4 border border-yellow-200">
+            <strong>Atención:</strong> Las credenciales temporales se generarán a través de Azure Active Directory y se enviará un enlace de verificación al empleado.
+          </div>
+          
+          <div className="flex justify-end space-x-3 pt-4 border-t border-slate-100">
+            <Button type="button" variant="ghost" onClick={() => setIsModalOpen(false)}>Cancelar</Button>
+            <Button type="submit" className="bg-red-600 hover:bg-red-700 text-white">Enviar Invitación</Button>
+          </div>
+        </form>
+      </Modal>
     </div>
   );
 }

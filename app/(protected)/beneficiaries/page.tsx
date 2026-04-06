@@ -7,12 +7,15 @@ import { MOCK_BENEFICIARIES, Beneficiary } from "@/data/beneficiaries";
 import { BeneficiaryList } from "@/components/beneficiaries/BeneficiaryList";
 import { BeneficiaryFilters } from "@/components/beneficiaries/BeneficiaryFilters";
 import { Button } from "@/components/ui/Button";
-import { Plus } from "lucide-react";
+import { Plus, Upload } from "lucide-react";
+import { Modal } from "@/components/ui/Modal";
+import { Input } from "@/components/ui/Input";
 
 export default function BeneficiariesPage() {
   const { user } = useAuth();
   const [beneficiaries, setBeneficiaries] = useState<Beneficiary[]>(MOCK_BENEFICIARIES);
   const [searchTerm, setSearchTerm] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const filteredBeneficiaries = beneficiaries.filter(b => {
     // Filtrado condicional según rol (simulado)
@@ -42,7 +45,7 @@ export default function BeneficiariesPage() {
         </div>
         
         {user?.role !== Role.PARTICIPANTE && (
-          <Button variant="primary" className="flex items-center">
+          <Button variant="primary" className="flex items-center" onClick={() => setIsModalOpen(true)}>
             <Plus size={18} className="mr-2" />
             Nuevo Beneficiario
           </Button>
@@ -52,6 +55,40 @@ export default function BeneficiariesPage() {
       <BeneficiaryFilters onSearch={setSearchTerm} />
       
       <BeneficiaryList beneficiaries={filteredBeneficiaries} />
+
+      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title="Alta de Nueva Persona Beneficiaria" maxWidth="max-w-2xl">
+        <form className="space-y-6" onSubmit={(e) => { e.preventDefault(); setIsModalOpen(false); alert("¡Beneficiario registrado con éxito! (Simulación)"); }}>
+          <div className="bg-blue-50 p-4 rounded-lg flex items-start text-blue-800 border border-blue-100 mb-6">
+            <Upload size={20} className="mr-3 mt-0.5 shrink-0" />
+            <div>
+              <p className="font-semibold text-sm">¿Tienes datos en otra plataforma?</p>
+              <p className="text-xs mt-1">Puedes importar beneficiarios directamente desde KoboToolbox, Ficheros Excel corporativos, o conectar con el CRM de Servicios Sociales.</p>
+              <Button type="button" variant="outline" className="mt-3 bg-white h-8 text-xs border-blue-200">Importar Datos Múltiples</Button>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <Input label="Nombre" placeholder="P. ej. Carlos" required />
+            <Input label="Apellidos" placeholder="P. ej. Sánchez" required />
+            <Input label="Documento Identidad" placeholder="12345678Z" required />
+            <Input label="Edad" type="number" placeholder="25" />
+            <Input label="Situación Laboral" placeholder="Desempleado < 6 meses" />
+            
+            <div className="space-y-1 w-full">
+              <label className="block text-sm font-medium text-slate-700">Proyecto Asignado</label>
+              <select className="flex h-10 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary">
+                <option>Vives Emplea</option>
+                <option>Vives Emprende</option>
+              </select>
+            </div>
+          </div>
+
+          <div className="flex justify-end space-x-3 pt-4 border-t border-slate-100">
+            <Button type="button" variant="ghost" onClick={() => setIsModalOpen(false)}>Cancelar</Button>
+            <Button type="submit">Guardar y Crear Ficha</Button>
+          </div>
+        </form>
+      </Modal>
     </div>
   );
 }

@@ -57,18 +57,22 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col md:flex-row">
       {/* Mobile Menu Button */}
-      <div className="md:hidden flex items-center justify-between bg-[#0f766e] text-white p-4">
-        <div className="font-bold text-lg">ACCIN Demo</div>
-        <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
+      <div className="md:hidden flex items-center justify-between bg-white border-b border-slate-200 p-4 shadow-sm">
+        <div className="flex items-center gap-3">
+          <img src="/logo.png" alt="Logotipo ACH" className="h-8 w-auto object-contain" />
+          <span className="font-black text-xl text-[#0f766e]">ACCIN</span>
+        </div>
+        <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} className="text-slate-600">
           {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
         </button>
       </div>
 
       {/* Sidebar */}
-      <aside className={`${isMobileMenuOpen ? 'block' : 'hidden'} md:block w-full md:w-64 bg-white border-r border-slate-200 flex-shrink-0`}>
+      <aside className={`${isMobileMenuOpen ? 'block' : 'hidden'} md:block w-full md:w-64 bg-white border-r border-slate-200 flex-shrink-0 z-20`}>
         <div className="h-full flex flex-col">
-          <div className="hidden md:flex h-16 items-center px-6 bg-[#0f766e] text-white font-bold text-xl">
-            ACH <span className="text-orange-400 ml-1">ACCIN</span>
+          <div className="hidden md:flex h-20 items-center justify-center p-4 gap-3 border-b border-slate-100 bg-white">
+            <img src="/logo.png" alt="Logotipo ACH" className="h-10 w-auto object-contain" />
+            <span className="font-black text-2xl text-[#0f766e]">ACCIN</span>
           </div>
           
           <nav className="flex-1 px-4 py-6 space-y-2">

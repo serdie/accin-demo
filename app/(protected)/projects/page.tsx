@@ -8,11 +8,14 @@ import { Card } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
 import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
-import { Search, Briefcase, Plus, Calendar, Euro, Users, ArrowRight } from "lucide-react";
+import { Search, Briefcase, Plus, Calendar, Euro, Users, ArrowRight, Upload } from "lucide-react";
+import { Modal } from "@/components/ui/Modal";
+import Link from "next/link";
 
 export default function ProjectsPage() {
   const { user } = useAuth();
   const [searchTerm, setSearchTerm] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const filteredProjects = MOCK_PROJECTS.filter(p => {
     if (searchTerm) {
@@ -35,7 +38,7 @@ export default function ProjectsPage() {
         </div>
         
         {user?.role !== Role.PARTICIPANTE && user?.role !== Role.TECNICO && (
-          <Button variant="primary" className="flex items-center">
+          <Button variant="primary" className="flex items-center" onClick={() => setIsModalOpen(true)}>
             <Plus size={18} className="mr-2" />
             Nuevo Proyecto
           </Button>
@@ -99,13 +102,35 @@ export default function ProjectsPage() {
             </div>
             
             <div className="p-4 border-t border-slate-100 bg-white rounded-b-lg flex justify-end">
-              <Button variant="ghost" className="text-teal-700 hover:text-teal-800 hover:bg-teal-50 text-sm h-8 px-3">
-                Ver Detalles <ArrowRight size={16} className="ml-2" />
-              </Button>
+              <Link href={`/projects/${p.id}`}>
+                <Button variant="ghost" className="text-teal-700 hover:text-teal-800 hover:bg-teal-50 text-sm h-8 px-3">
+                  Ver Detalles <ArrowRight size={16} className="ml-2" />
+                </Button>
+              </Link>
             </div>
           </Card>
         ))}
       </div>
+
+      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title="Apertura de Nuevo Proyecto">
+        <form className="space-y-4" onSubmit={(e) => { e.preventDefault(); setIsModalOpen(false); alert("¡Proyecto 'demo' creado temporalmente!"); }}>
+          <div className="bg-orange-50 p-3 rounded text-orange-800 border border-orange-100 text-sm flex gap-3 mb-4">
+            <Upload size={18} className="shrink-0" /> Puedes importar proyectos y convocatorias activas directamente desde Atenea o el HUB Financiero.
+          </div>
+          <Input label="Código Convocatoria" placeholder="Ej. VEMP-24-X" required />
+          <Input label="Nombre del Proyecto" placeholder="Ej. Vives Emprende 2025" required />
+          <div className="grid grid-cols-2 gap-4">
+            <Input label="Fecha Inicio" type="date" required />
+            <Input label="Fecha Fin" type="date" required />
+          </div>
+          <Input label="Donante / Financiador principal" placeholder="Ej. FSE" required />
+          
+          <div className="flex justify-end space-x-3 pt-6">
+            <Button type="button" variant="ghost" onClick={() => setIsModalOpen(false)}>Cancelar</Button>
+            <Button type="submit">Confirmar Creación</Button>
+          </div>
+        </form>
+      </Modal>
     </div>
   );
 }

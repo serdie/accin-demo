@@ -6,13 +6,15 @@ import { AIInsightsPanel } from "./AIInsightsPanel";
 import { Card, CardContent } from "@/components/ui/Card";
 import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
-
+import { Modal } from "@/components/ui/Modal";
 interface Props {
   beneficiary: Beneficiary;
 }
 
 export function BeneficiaryDetailTabs({ beneficiary }: Props) {
   const [activeTab, setActiveTab] = useState("datos");
+  const [isActivityModalOpen, setIsActivityModalOpen] = useState(false);
+  const [isFileModalOpen, setIsFileModalOpen] = useState(false);
 
   const tabs = [
     { id: "datos", label: "Datos Personales" },
@@ -75,7 +77,7 @@ export function BeneficiaryDetailTabs({ beneficiary }: Props) {
           {activeTab === "itinerario" && (
             <div className="space-y-4">
               <div className="flex justify-end">
-                <Button size="sm">Registrar Actividad</Button>
+                <Button size="sm" onClick={() => setIsActivityModalOpen(true)}>Registrar Actividad</Button>
               </div>
               {beneficiary.activities.length === 0 ? (
                 <Card><CardContent className="p-6 text-center text-slate-500">No hay actividades registradas.</CardContent></Card>
@@ -102,7 +104,7 @@ export function BeneficiaryDetailTabs({ beneficiary }: Props) {
                     <p className="text-slate-500 text-sm mb-4">
                       En la versión final, estos documentos se almacenarán de forma segura en SharePoint corporativo y se enlazarán con los formularios recogidos en KoboToolbox.
                     </p>
-                    <Button variant="outline" size="sm" className="mt-2">Seleccionar Archivos</Button>
+                    <Button variant="outline" size="sm" className="mt-2" onClick={() => setIsFileModalOpen(true)}>Seleccionar Archivos</Button>
                  </div>
                  
                  <div className="flex items-center justify-between mb-4">
@@ -162,6 +164,7 @@ export function BeneficiaryDetailTabs({ beneficiary }: Props) {
             </Card>
           )}
           
+          // Render panel extra here if needed... inside activeTab === "ia" logic is already rendering...
         </div>
 
         {/* Panel lateral IA visible sólo en su pestaña (o si lo prefieres siempre, quita la condición) */}
@@ -171,6 +174,74 @@ export function BeneficiaryDetailTabs({ beneficiary }: Props) {
           </div>
         )}
       </div>
+
+      <Modal isOpen={isActivityModalOpen} onClose={() => setIsActivityModalOpen(false)} title="Registrar Nueva Actividad">
+        <form className="space-y-4" onSubmit={(e) => { e.preventDefault(); setIsActivityModalOpen(false); alert("Actividad guardada correctamente en el Itinerario."); }}>
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-1">
+              <label className="block text-sm font-medium text-slate-700">Tipo de Actividad</label>
+              <select className="flex h-10 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary">
+                <option>Entrevista Individual</option>
+                <option>Sesión Grupal</option>
+                <option>Taller General</option>
+                <option>Derivación a Oferta</option>
+                <option>Mediación Laboral</option>
+              </select>
+            </div>
+            <Input label="Fecha" type="date" defaultValue={new Date().toISOString().split('T')[0]} required />
+          </div>
+          
+          <div className="space-y-1">
+            <label className="block text-sm font-medium text-slate-700">Descripción / Notas Privadas</label>
+            <textarea 
+              className="flex w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-primary min-h-[100px]" 
+              placeholder="Detalla lo que se ha trabajado en la sesión..."
+              required
+            />
+          </div>
+
+          <div className="flex items-center space-x-2 mt-2 bg-slate-50 p-2 rounded">
+            <input type="checkbox" id="public_student" className="rounded border-slate-300" />
+            <label htmlFor="public_student" className="text-sm text-slate-600">Hacer visible esta actividad en el Portal del Participante</label>
+          </div>
+
+          <div className="flex justify-end space-x-3 pt-4 border-t border-slate-100">
+            <Button type="button" variant="ghost" onClick={() => setIsActivityModalOpen(false)}>Cancelar</Button>
+            <Button type="submit">Guardar Registro</Button>
+          </div>
+        </form>
+      </Modal>
+
+      <Modal isOpen={isFileModalOpen} onClose={() => setIsFileModalOpen(false)} title="Anexar Documento al Expediente">
+        <form className="space-y-4" onSubmit={(e) => { e.preventDefault(); setIsFileModalOpen(false); alert("Documento subido a la simulación del Gestor Documental."); }}>
+          <p className="text-sm text-slate-600 bg-blue-50 p-3 rounded-lg border border-blue-100">
+            Recuerda que todos los archivos se centralizan en SharePoint. Asegúrate de categorizar correctamente el documento.
+          </p>
+
+          <Input label="Nombre de Referencia" placeholder="Ej. Curriculum Actualizado" required />
+          
+          <div className="space-y-1">
+            <label className="block text-sm font-medium text-slate-700">Categoría</label>
+            <select className="flex h-10 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary">
+              <option>Identificación Personal (DNI/NIE)</option>
+              <option>Curriculum Vitae</option>
+              <option>Titulaciones / Certificados</option>
+              <option>Informes Sociales</option>
+              <option>Otros</option>
+            </select>
+          </div>
+          
+          <div className="border-2 border-dashed border-slate-300 p-8 rounded-lg text-center bg-slate-50 cursor-pointer">
+            <span className="text-slate-500 font-medium">Haz Clic Aquí para Navegar en tu Equipo</span>
+            <input type="file" className="hidden" />
+          </div>
+
+          <div className="flex justify-end space-x-3 pt-4 border-t border-slate-100">
+            <Button type="button" variant="ghost" onClick={() => setIsFileModalOpen(false)}>Cancelar</Button>
+            <Button type="submit">Subir a SharePoint</Button>
+          </div>
+        </form>
+      </Modal>
     </div>
   );
 }

@@ -9,10 +9,13 @@ import { Badge } from "@/components/ui/Badge";
 import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
 import { Search, Building2, Plus, MapPin, UserSquare, ArrowRight, Phone } from "lucide-react";
+import { Modal } from "@/components/ui/Modal";
+import Link from "next/link";
 
 export default function CompaniesPage() {
   const { user } = useAuth();
   const [searchTerm, setSearchTerm] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const filteredCompanies = MOCK_COMPANIES.filter(c => {
     if (searchTerm) {
@@ -35,7 +38,7 @@ export default function CompaniesPage() {
         </div>
         
         {user?.role !== Role.PARTICIPANTE && (
-          <Button variant="primary" className="flex items-center bg-blue-600 hover:bg-blue-700">
+          <Button variant="primary" className="flex items-center bg-blue-600 hover:bg-blue-700" onClick={() => setIsModalOpen(true)}>
             <Plus size={18} className="mr-2" />
             Nueva Empresa
           </Button>
@@ -85,13 +88,43 @@ export default function CompaniesPage() {
                 </div>
               </div>
               
-              <button className="w-full mt-4 flex items-center justify-center py-2 text-sm text-slate-600 font-medium border border-slate-200 rounded-md hover:bg-blue-50 hover:text-blue-700 hover:border-blue-200 transition-colors">
-                Ver Ficha CRM <ArrowRight size={16} className="ml-2" />
-              </button>
+              <Link href={`/companies/${c.id}`} className="block w-full mt-4">
+                <button className="w-full flex items-center justify-center py-2 text-sm text-slate-600 font-medium border border-slate-200 rounded-md hover:bg-blue-50 hover:text-blue-700 hover:border-blue-200 transition-colors">
+                  Ver Ficha CRM <ArrowRight size={16} className="ml-2" />
+                </button>
+              </Link>
             </div>
           </Card>
         ))}
       </div>
+
+      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title="Registro de Nueva Empresa">
+        <form className="space-y-4" onSubmit={(e) => { e.preventDefault(); setIsModalOpen(false); alert("Empresa registrada. El gestor validará los datos."); }}>
+          <Input label="Razón Social / Nombre" placeholder="Ej. ACME Corp S.L." required />
+          <Input label="NIF / CIF" placeholder="B12345678" required />
+          
+          <div className="grid grid-cols-2 gap-4">
+            <Input label="Sector" placeholder="Ej. Logística" required />
+            <Input label="Provincia" placeholder="Ej. Madrid" required />
+          </div>
+
+          <div className="bg-slate-50 p-4 border rounded-lg mt-4">
+            <h4 className="text-sm font-semibold mb-3">Persona de Contacto</h4>
+            <div className="space-y-4">
+              <Input label="Nombre y Apellidos" placeholder="" required />
+              <div className="grid grid-cols-2 gap-4">
+                <Input label="Email" type="email" required />
+                <Input label="Teléfono" type="tel" />
+              </div>
+            </div>
+          </div>
+          
+          <div className="flex justify-end space-x-3 pt-6">
+            <Button type="button" variant="ghost" onClick={() => setIsModalOpen(false)}>Cancelar</Button>
+            <Button type="submit" className="bg-blue-600 hover:bg-blue-700">Guardar Empresa</Button>
+          </div>
+        </form>
+      </Modal>
     </div>
   );
 }
