@@ -46,8 +46,8 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
     : [
         { name: "Dashboard", href: "/", icon: LayoutDashboard },
         { name: "Personas", href: "/beneficiaries", icon: Users },
-        { name: "Proyectos", href: "/#projects", icon: Briefcase },
-        { name: "Empresas", href: "/#companies", icon: Building2 },
+        { name: "Proyectos", href: "/projects", icon: Briefcase },
+        { name: "Empresas", href: "/companies", icon: Building2 },
       ];
       
   if (user.role === Role.ADMIN) {
@@ -118,18 +118,28 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
       {/* Main content */}
       <main className="flex-1 flex flex-col min-w-0 overflow-hidden">
         {/* Topbar role indicator */}
-        <header className="bg-orange-100 px-6 py-2 border-b border-orange-200 flex items-center justify-between">
-          <div className="text-sm font-medium text-orange-800 flex items-center">
-             Estás viendo la demo como: <span className="ml-2 px-2 py-0.5 bg-orange-200 rounded text-orange-900">{user.role}</span>
+        <header className="bg-orange-100 px-6 py-3 border-b border-orange-200 flex flex-col md:flex-row md:items-center justify-between gap-2 shadow-sm">
+          <div className="text-sm font-medium text-orange-900 flex items-center">
+             <span>Estás viendo la demo como:</span>
+             <span className="ml-2 px-2.5 py-1 bg-white text-orange-700 font-bold rounded-md shadow-sm border border-orange-200">{user.role}</span>
+          </div>
+          <div className="text-xs text-orange-800 italic opacity-90 hidden md:block">
+            {user.role === Role.ADMIN && "Perfil orientado a dirección, reporting y control global."}
+            {user.role === Role.GESTOR && "Perfil orientado a coordinación de equipo en tu sede/delegación."}
+            {user.role === Role.TECNICO && "Perfil orientado a ejecución técnica y seguimiento directo."}
+            {user.role === Role.PARTICIPANTE && "Vista externa asegurada del propio itinerario."}
           </div>
         </header>
         
-        <div className="flex-1 overflow-auto p-4 md:p-8">
+        <div className="flex-1 overflow-auto p-4 md:p-8 relative">
+          {/* Fondo sutil elegante para toda la app */}
+          <div className="absolute inset-0 bg-grid-slate-100 [mask-image:linear-gradient(0deg,#fff,rgba(255,255,255,0.6))] pointer-events-none -z-10" />
           {children}
         </div>
         
-        <footer className="py-4 text-center text-sm text-slate-500 bg-white border-t border-slate-200">
-          Prototipo ACCIN – Itinerarios Conectados · Demo no productiva para Acción contra el Hambre (ACH)
+        <footer className="py-4 px-6 text-center text-xs text-slate-500 bg-white border-t border-slate-200 flex flex-col md:flex-row items-center justify-between">
+          <span>Prototipo ACCIN – Itinerarios Conectados · Demo Técnica</span>
+          <span className="font-medium text-slate-600 mt-2 md:mt-0">Desarrollado por <span className="text-[#ea580c] font-bold">EC‑Innova</span></span>
         </footer>
       </main>
     </div>

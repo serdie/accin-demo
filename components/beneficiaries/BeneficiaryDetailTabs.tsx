@@ -97,12 +97,22 @@ export function BeneficiaryDetailTabs({ beneficiary }: Props) {
           {activeTab === "documentos" && (
             <Card>
               <CardContent className="p-6">
-                 <div className="border-2 border-dashed border-slate-300 rounded-lg p-10 text-center mb-6 bg-slate-50">
-                    <p className="text-slate-500 text-sm">Arrastra y suelta documentos aquí o haz clic para subir</p>
-                    <Button variant="outline" size="sm" className="mt-4">Seleccionar Archivos</Button>
+                 <div className="border-2 border-dashed border-slate-300 rounded-lg p-10 text-center mb-6 bg-slate-50 transition-colors hover:bg-slate-100 hover:border-teal-400">
+                    <p className="font-semibold text-slate-700 mb-2">Arrastra y suelta documentos aquí o haz clic para subir</p>
+                    <p className="text-slate-500 text-sm mb-4">
+                      En la versión final, estos documentos se almacenarán de forma segura en SharePoint corporativo y se enlazarán con los formularios recogidos en KoboToolbox.
+                    </p>
+                    <Button variant="outline" size="sm" className="mt-2">Seleccionar Archivos</Button>
                  </div>
                  
-                 <h4 className="font-medium text-slate-800 mb-4">Documentos Subidos</h4>
+                 <div className="flex items-center justify-between mb-4">
+                   <h4 className="font-medium text-slate-800">Documentos Subidos</h4>
+                   <div className="flex gap-2">
+                     <span className="text-[10px] font-bold bg-[#0364B8] text-white px-2 py-0.5 rounded flex items-center">SharePoint Sync</span>
+                     <span className="text-[10px] font-bold bg-[#146AA2] text-white px-2 py-0.5 rounded flex items-center">KoboToolbox</span>
+                   </div>
+                 </div>
+                 
                  {beneficiary.documents.length === 0 ? (
                     <p className="text-sm text-slate-500">No hay documentos adjuntos.</p>
                  ) : (
@@ -123,9 +133,31 @@ export function BeneficiaryDetailTabs({ beneficiary }: Props) {
           )}
 
           {activeTab === "ia" && (
-            <Card className="bg-slate-50 border-dashed">
-              <CardContent className="p-8 text-center text-slate-500">
-                Panel de IA a la derecha
+            <Card className="bg-gradient-to-br from-purple-50 to-white border-purple-100 shadow-sm">
+              <CardContent className="p-8">
+                <div className="mb-6 flex justify-center">
+                  <div className="p-4 bg-purple-100 rounded-full text-purple-600">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                  </div>
+                </div>
+                <h3 className="text-xl font-bold text-slate-800 text-center mb-4">Inteligencia Artificial para Priorizar el Acompañamiento</h3>
+                <div className="text-slate-600 text-sm space-y-4 max-w-lg mx-auto text-center">
+                  <p>
+                    La IA analiza el perfil para sugerir el itinerario óptimo, calcular la probabilidad de éxito e identificar posibles riesgos de abandono de forma temprana.
+                  </p>
+                  <p className="font-medium text-purple-800">
+                    Se entrenará exclusivamente con datos históricos anonimizados de ACH. Su objetivo es apoyar tus decisiones técnicas, no automatizarlas.
+                  </p>
+                  
+                  <div className="mt-8 text-left bg-white p-4 rounded-lg border border-purple-100">
+                    <h4 className="font-semibold text-slate-700 mb-2">Quick wins implementados en esta demo:</h4>
+                    <ul className="list-disc pl-5 space-y-2 text-slate-500">
+                      <li>Autocompletado inteligente desde CV / Documentos.</li>
+                      <li>Detección de factores clave (brecha digital, absentismo).</li>
+                      <li>Dashboard resumen de éxito (visible en el panel derecho).</li>
+                    </ul>
+                  </div>
+                </div>
               </CardContent>
             </Card>
           )}

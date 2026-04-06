@@ -10,6 +10,9 @@ export default function LoginPage() {
         <h2 className="mt-4 text-2xl font-bold text-slate-900 border-b pb-4">
           Itinerarios Conectados
         </h2>
+        <p className="mt-4 text-sm font-medium text-slate-500 bg-slate-100 p-2 rounded-lg border border-slate-200">
+          Prototipo desarrollado por <strong>Espacios Castellanos de Innovación (EC‑Innova)</strong> para la licitación ACCIN.
+        </p>
       </div>
 
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">

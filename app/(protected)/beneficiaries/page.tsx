@@ -30,11 +30,15 @@ export default function BeneficiariesPage() {
   });
 
   return (
-    <div className="space-y-6">
-      <div className="flex justify-between items-center bg-white p-4 rounded-xl border border-slate-200">
+    <div className="space-y-6 animate-in fade-in duration-500">
+      <div className="flex justify-between items-center bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
         <div>
-          <h1 className="text-2xl font-bold text-slate-800">Personas Beneficiarias</h1>
-          <p className="text-sm text-slate-500">Gestión y seguimiento de itinerarios</p>
+          <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight">Personas Beneficiarias</h1>
+          <p className="text-sm font-medium text-teal-700 mt-1 flex items-center">
+            {user?.role === Role.ADMIN && "Viendo beneficiarios de todas las delegaciones."}
+            {user?.role === Role.GESTOR && "Viendo beneficiarios de tu oficina."}
+            {user?.role === Role.TECNICO && "Viendo beneficiarios de tus proyectos asignados."}
+          </p>
         </div>
         
         {user?.role !== Role.PARTICIPANTE && (
